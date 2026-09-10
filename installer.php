@@ -37,7 +37,10 @@ function log_line(string $msg, string $type = 'info'): void {
     $icon  = $icons[$type]  ?? '→';
     $color = $colors[$type] ?? '#888';
     echo "<div style='color:{$color}; margin:2px 0;'>{$icon} " . htmlspecialchars($msg) . "</div>";
-    ob_flush(); flush();
+    if (ob_get_level() > 0) {
+        @ob_flush();
+    }
+    @flush();
 }
 
 /** Cek requirement sebelum memulai */
@@ -198,13 +201,19 @@ function embed_site_key(string $configPath, string $siteKey): void {
         throw new RuntimeException("Tidak bisa baca config.php");
     }
 
-    // Cek apakah sudah ada siteKey
-    if (str_contains($konten, 'siteKey')) return;
-
-    // Sisipkan setelah baris class AppConfig {
-    $tanda     = 'public static string $credential';
-    $penyisipan = '    public static string $siteKey = \'' . $siteKey . "'; // auto-generated\n    ";
-    $kontenBaru = str_replace($tanda, $penyisipan . $tanda, $konten);
+    if (preg_match("/public static string \\\$siteKey = '';/", $konten)) {
+        $kontenBaru = str_replace(
+            "public static string \$siteKey = '';",
+            "public static string \$siteKey = '{$siteKey}';",
+            $konten
+        );
+    } elseif (!str_contains($konten, '$siteKey')) {
+        $tanda     = 'public static string $credential';
+        $penyisipan = "public static string \$siteKey = '{$siteKey}'; // auto-generated\n    ";
+        $kontenBaru = str_replace($tanda, $penyisipan . $tanda, $konten);
+    } else {
+        return;
+    }
 
     if (@file_put_contents($configPath, $kontenBaru) === false) {
         throw new RuntimeException("Tidak bisa tulis ke config.php");
