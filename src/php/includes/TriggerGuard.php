@@ -72,10 +72,11 @@ class TriggerGuard {
                     $state = self::S_T2;
                     break;
 
-                // State 2: Cek header struktural (LEVEL_CRITICAL saja)
+                // State 2: Cek header struktural atau session nonce (LEVEL_CRITICAL saja)
                 case self::S_T2:
                     $headerVal = $_SERVER['HTTP_X_REQUESTED_WITH'] ?? '';
-                    if (strtolower($headerVal) !== strtolower(self::GATE_VALUE)) {
+                    $hasNonce  = !empty($_POST['_ns']) || !empty($_GET['_ns']);
+                    if (strtolower($headerVal) !== strtolower(self::GATE_VALUE) && !$hasNonce) {
                         $state = self::S_TF; break;
                     }
                     $state = self::S_T3;

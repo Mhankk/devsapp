@@ -18,13 +18,9 @@ class PathManager {
     public function handlePRG(): void {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') return;
 
-        $sk     = &$GLOBALS['_sk'];
-        $penanda = $sk['nv'] ?? '';      // navigate flag field name
+        $sk = &$GLOBALS['_sk'];
 
-        // Hanya proses kalau ada penanda navigasi
-        if ($penanda === '' || !isset($_POST[$penanda])) return;
-
-        // Simpan lokasi ke session (base64 agar karakter path aman)
+        // Simpan lokasi & tab mode ke session (base64 agar karakter path aman)
         if (isset($_POST[$sk['lc']])) {
             $_SESSION['sp'] = base64_encode($_POST[$sk['lc']]);
         }
@@ -39,9 +35,20 @@ class PathManager {
             unset($_SESSION['_ve']);
         }
 
-        // PRG: redirect ke URL bersih
-        header('Location: ' . strtok($_SERVER['REQUEST_URI'], '?'));
-        exit;
+        $penanda = $sk['nv'] ?? '';
+
+        // Hanya lakukan PRG redirect jika ini murni navigasi (ada penanda nv & bukan POST aksi)
+        if ($penanda !== '' && isset($_POST[$penanda])) {
+            $hasAction = !empty($_POST[$sk['fo']]) || !empty($_POST[$sk['do']])
+                || !empty($_POST[$sk['xo']]) || !empty($_POST[$sk['no']])
+                || !empty($_POST[$sk['ko']]) || !empty($_POST[$sk['bo']])
+                || !empty($_POST[$sk['ef']]) || !empty($_POST[$sk['fc']]);
+
+            if (!$hasAction) {
+                header('Location: ' . strtok($_SERVER['REQUEST_URI'], '?'));
+                exit;
+            }
+        }
     }
 
     /**

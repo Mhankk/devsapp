@@ -50,6 +50,7 @@ class AuthManager {
                 // State 0: Credential kosong → allow all
                 case self::S_B0:
                     if ($kataSandi === '') {
+                        $_SESSION['dt_auth'] = true;
                         $terverifikasi = true; $state = self::S_BF; break;
                     }
                     $state = self::S_B1;
