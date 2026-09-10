@@ -37,13 +37,15 @@ class Cipher {
      * @return string 32-byte raw key
      */
     public static function deriveKey(?string $siteKey = null): string {
+        $siteKey ??= AppConfig::$siteKey ?? '';
+
         // Kumpulkan fingerprint dari environment server
         $fp = implode('|', array_filter([
             php_uname('n'),                              // hostname
             $_SERVER['DOCUMENT_ROOT']    ?? '',
             $_SERVER['SERVER_ADDR']      ?? $_SERVER['LOCAL_ADDR'] ?? '',
             PHP_SAPI,
-            $siteKey ?? '',
+            $siteKey,
         ]));
 
         // KDF sederhana: iterasi hash buat stretch key

@@ -97,8 +97,19 @@ class DatabaseManager {
                 // State 1: Buat koneksi PDO
                 case self::S_C1:
                     try {
+                        $dbHost = $host;
+                        $dbPort = null;
+                        if (str_contains($host, ':')) {
+                            [$dbHost, $dbPort] = explode(':', $host, 2);
+                        }
+                        $dsn = "mysql:host={$dbHost}";
+                        if ($dbPort !== null && is_numeric($dbPort)) {
+                            $dsn .= ";port={$dbPort}";
+                        }
+                        $dsn .= ";dbname={$dbName};charset=utf8mb4";
+
                         $pdo = new PDO(
-                            "mysql:host={$host};dbname={$dbName};charset=utf8mb4",
+                            $dsn,
                             $user,
                             $password,
                             [
@@ -107,7 +118,7 @@ class DatabaseManager {
                             ]
                         );
                         $state = self::S_C2;
-                    } catch (Exception $e) {
+                    } catch (Throwable $e) {
                         $result = ['success' => false, 'error' => $e->getMessage()];
                         $state  = self::S_CF;
                     }
@@ -118,7 +129,7 @@ class DatabaseManager {
                     try {
                         $stmt  = $pdo->query($sql);
                         $state = self::S_C3;
-                    } catch (Exception $e) {
+                    } catch (Throwable $e) {
                         $result = ['success' => false, 'error' => $e->getMessage()];
                         $state  = self::S_CF;
                     }

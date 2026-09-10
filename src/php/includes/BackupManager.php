@@ -36,7 +36,7 @@ class BackupManager {
                     $items = @scandir($path) ?: [];
                     foreach ($items as $item) {
                         if ($item === '.' || $item === '..') continue;
-                        $fullPath = $path . DIRECTORY_SEPARATOR . $item;
+                        $fullPath = rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $item;
                         $zipPath  = $prefix . '/' . $item;
                         if (is_dir($fullPath)) {
                             $zip->addEmptyDir($zipPath);
@@ -64,9 +64,15 @@ class BackupManager {
         // ---- Fallback ke tar via command runner ----
         if (cmd_available()) {
             $tarFile = "{$tmpDir}/{$basename}_backup_{$ts}.tar.gz";
+            $targetParent = dirname($dirPath);
+            $targetFolder = basename($dirPath);
+            if ($targetFolder === '') {
+                $targetParent = '/';
+                $targetFolder = '.';
+            }
             run_cmd(
-                'cd ' . escapeshellarg(dirname($dirPath)) .
-                ' && tar -czf ' . escapeshellarg($tarFile) . ' ' . escapeshellarg($basename)
+                'cd ' . escapeshellarg($targetParent) .
+                ' && tar -czf ' . escapeshellarg($tarFile) . ' ' . escapeshellarg($targetFolder)
             );
             if (is_file($tarFile)) {
                 return [

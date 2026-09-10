@@ -16,6 +16,7 @@
         <input type="hidden" name="<?= h($_sk['no']) ?>" value="ns">
         <input type="hidden" name="<?= h($_sk['md']) ?>" value="net">
         <input type="hidden" name="<?= h($_sk['lc']) ?>" value="<?= h($viewData['currentPath']) ?>">
+        <input type="hidden" name="_ns" value="<?= h($viewData['nonce']) ?>">
         <div style="display:flex; gap:8px;">
             <input type="text" name="<?= h($_sk['nh']) ?>" placeholder="example.com" style="flex:1;"
                    value="<?= h($viewData['net']['lastAction'] === 'ns' ? $viewData['net']['lastHost'] : '') ?>"
@@ -62,6 +63,7 @@
         <input type="hidden" name="<?= h($_sk['no']) ?>" value="pt">
         <input type="hidden" name="<?= h($_sk['md']) ?>" value="net">
         <input type="hidden" name="<?= h($_sk['lc']) ?>" value="<?= h($viewData['currentPath']) ?>">
+        <input type="hidden" name="_ns" value="<?= h($viewData['nonce']) ?>">
         <div style="display:flex; gap:8px; flex-wrap:wrap;">
             <input type="text"   name="<?= h($_sk['nh']) ?>"  placeholder="example.com"       style="flex:2;"
                    value="<?= h($viewData['net']['lastAction'] === 'pt' ? $viewData['net']['lastHost'] : '') ?>"
@@ -105,6 +107,7 @@
         <input type="hidden" name="<?= h($_sk['no']) ?>" value="hdr">
         <input type="hidden" name="<?= h($_sk['md']) ?>" value="net">
         <input type="hidden" name="<?= h($_sk['lc']) ?>" value="<?= h($viewData['currentPath']) ?>">
+        <input type="hidden" name="_ns" value="<?= h($viewData['nonce']) ?>">
         <div style="display:flex; gap:8px;">
             <input type="text" name="<?= h($_sk['nu']) ?>" placeholder="https://example.com" style="flex:1;"
                    value="<?= h($viewData['net']['lastUrl']) ?>" required>

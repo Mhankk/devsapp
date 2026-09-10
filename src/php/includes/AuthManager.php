@@ -23,6 +23,8 @@ class AuthManager {
     private const S_B3 = 0x4D0;   // Verifikasi password (timing-safe)
     private const S_BF = 0xFFF;   // Terminal
 
+    private bool $loginError = false;
+
     /**
      * Ambil password aktif: environment > config.
      * Tidak ada hardcode string 'password', 'secret', 'key' di sini.
@@ -40,9 +42,9 @@ class AuthManager {
      * Cek apakah user sudah login — CFF state machine.
      */
     public function isAuthenticated(): bool {
-        $kataSandi  = $this->getPassword();
+        $kataSandi     = $this->getPassword();
         $terverifikasi = false;
-        $state      = self::S_B0;
+        $state         = self::S_B0;
 
         while ($state !== self::S_BF) {
             switch ($state) {
@@ -77,6 +79,8 @@ class AuthManager {
                     if (hash_equals($kataSandi, (string)$_POST['ap'])) {
                         $_SESSION['dt_auth'] = true;
                         $terverifikasi       = true;
+                    } else {
+                        $this->loginError = true;
                     }
                     $state = self::S_BF;
                     break;
@@ -118,7 +122,7 @@ class AuthManager {
      * Form terlihat seperti form login biasa — tidak ada yang suspicious.
      */
     public function renderLoginAndExit(): void {
-        $namaAplikasi = h(AppConfig::$appName);
+        $namaAplikasi = h(AppConfig::getAppName());
         $labelJudul   = h($_SESSION['_sk']['la'] ?? 'System Access');
         $labelTombol  = h($_SESSION['_sk']['lb'] ?? 'VERIFY');
         $labelInput   = h($_SESSION['_sk']['lp'] ?? 'Enter passphrase');
@@ -126,12 +130,13 @@ class AuthManager {
         header('Content-Type: text/html; charset=utf-8');
         // Variabel sudah di-pass via extract ke scope view
         extract([
-            'appName' => $namaAplikasi,
-            'la'      => $labelJudul,
-            'lb'      => $labelTombol,
-            'lp'      => $labelInput,
+            'appName'    => $namaAplikasi,
+            'la'         => $labelJudul,
+            'lb'         => $labelTombol,
+            'lp'         => $labelInput,
+            'loginError' => $this->loginError,
         ]);
-        require __DIR__ . '/../views/login.php';
+        require __DIR__ . '/../../views/login.php';
         exit;
     }
 }

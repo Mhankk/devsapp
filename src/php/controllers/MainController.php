@@ -257,7 +257,7 @@ class MainController {
         // ---- Compose view data dengan key names WAF-safe ----
         return [
             'config' => [
-                'appName'   => AppConfig::$appName,
+                'appName'   => AppConfig::getAppName(),
                 'version'   => AppConfig::$version,
                 'refreshMs' => AppConfig::$refreshMs,
             ],

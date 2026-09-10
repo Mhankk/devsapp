@@ -107,4 +107,5 @@ if (!isset($_SESSION['_sk']['an'])) {
 unset($__sg, $__rw);
 
 // Shortcut global ke session key registry
-$_sk = &$_SESSION['_sk'];
+$GLOBALS['_sk'] = &$_SESSION['_sk'];
+$_sk            = &$_SESSION['_sk'];

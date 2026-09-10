@@ -14,7 +14,7 @@
 <meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
 <title><?= h($viewData['config']['appName']) ?></title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<link rel="stylesheet" href="src/assets/css/app.css">
+<link rel="stylesheet" href="<?= $basePath ?? '' ?>/src/assets/css/app.css">
 </head>
 <body>
 <div class="wrap">
@@ -52,8 +52,8 @@ const APP_CONFIG = <?= json_encode([
     'currentPath' => $viewData['currentPath'],
     'm'           => $viewData['m'],
     '_sk'         => $_SESSION['_sk'],
-], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?>;
+], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE) ?>;
 </script>
-<script src="src/assets/js/app.js"></script>
+<script src="<?= $basePath ?? '' ?>/src/assets/js/app.js"></script>
 </body>
 </html>

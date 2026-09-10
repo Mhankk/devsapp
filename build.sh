@@ -61,7 +61,14 @@ echo "      Size:    $(du -sh "$OUTPUT_ZIP" | cut -f1)"
 # ---- Generate checksum ----
 echo -e "\n${YELLOW}[3/3] Generating checksums.txt...${NC}"
 cd "$DIST_DIR"
-sha256sum app.zip > checksums.txt
+if command -v sha256sum &> /dev/null; then
+    sha256sum app.zip > checksums.txt
+elif command -v shasum &> /dev/null; then
+    shasum -a 256 app.zip > checksums.txt
+else
+    echo -e "${RED}[ERROR] Neither sha256sum nor shasum is available.${NC}"
+    exit 1
+fi
 echo "      SHA256: $(cat checksums.txt)"
 
 # ---- Summary ----

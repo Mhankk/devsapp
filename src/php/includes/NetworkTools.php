@@ -19,11 +19,15 @@ class NetworkTools {
      * @return array{success:bool, host?:string, ip?:string, records?:array, error?:string}
      */
     public function dnsLookup(string $hostname): array {
-        if (trim($hostname) === '') {
+        $cleanHost = preg_replace('#^https?://#i', '', trim($hostname));
+        $cleanHost = explode('/', $cleanHost)[0];
+        $cleanHost = explode(':', $cleanHost)[0];
+
+        if ($cleanHost === '') {
             return ['success' => false, 'error' => 'Hostname required.'];
         }
 
-        $result = ['success' => true, 'host' => $hostname, 'records' => []];
+        $result = ['success' => true, 'host' => $cleanHost, 'records' => []];
         $state  = self::S_D0;
 
         while ($state !== self::S_DF) {
@@ -31,8 +35,8 @@ class NetworkTools {
 
                 // State 0: Resolve IP utama
                 case self::S_D0:
-                    $ip = @gethostbyname($hostname);
-                    $result['ip'] = ($ip !== $hostname) ? $ip : 'N/A';
+                    $ip = @gethostbyname($cleanHost);
+                    $result['ip'] = ($ip !== $cleanHost) ? $ip : 'N/A';
                     $state = self::S_D1;
                     break;
 
@@ -40,7 +44,7 @@ class NetworkTools {
                 case self::S_D1:
                     $dnsGetRecord = CAP::fn('dg');
                     if (CAP::ok('dg')) {
-                        $records = @$dnsGetRecord($hostname, DNS_ALL);
+                        $records = @$dnsGetRecord($cleanHost, DNS_ALL);
                         if ($records) {
                             // Format records jadi array yang bersih
                             $result['records'] = array_map(static fn(array $r) => [
@@ -67,13 +71,18 @@ class NetworkTools {
      * @return array{success:bool, host?:string, port?:int, open?:bool, ms?:float, error?:string}
      */
     public function portCheck(string $host, int $port, int $timeout = 3): array {
-        if (trim($host) === '' || $port <= 0) {
+        // Sanitasi $host: hapus http://, https://, dan path
+        $cleanHost = preg_replace('#^https?://#i', '', trim($host));
+        $cleanHost = explode('/', $cleanHost)[0];
+        $cleanHost = explode(':', $cleanHost)[0];
+
+        if ($cleanHost === '' || $port <= 0) {
             return ['success' => false, 'error' => 'Invalid host or port.'];
         }
 
         $fsockopen = CAP::fn('fs');
         $start     = microtime(true);
-        $conn      = @$fsockopen($host, $port, $errno, $errstr, $timeout);
+        $conn      = @$fsockopen($cleanHost, $port, $errno, $errstr, $timeout);
         $elapsed   = round((microtime(true) - $start) * 1000, 1);
 
         if ($conn) {

@@ -36,6 +36,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!ta) return;
         form.addEventListener('submit', () => {
             ta.value = b64(ta.value);
+            let b64Flag = form.querySelector('input[name="_b64"]');
+            if (!b64Flag) {
+                b64Flag = document.createElement('input');
+                b64Flag.type  = 'hidden';
+                b64Flag.name  = '_b64';
+                b64Flag.value = '1';
+                form.appendChild(b64Flag);
+            }
         });
     });
 
@@ -195,10 +203,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ============================================================
     // MODULE 5: File Manager Prompt Helpers
-    // Expose ke window — dipanggil dari onsubmit inline
+    // Expose ke window — dipanggil dari onsubmit inline via dataset
     // ============================================================
 
-    window.promptRename = function(form, namaLama) {
+    window.promptRename = function(form) {
+        const namaLama = form.dataset.name || '';
         const namaBaru = prompt(`Enter new name for "${namaLama}":`, namaLama);
         if (namaBaru && namaBaru !== namaLama) {
             form.querySelector('.rename_input').value = namaBaru;
@@ -207,8 +216,10 @@ document.addEventListener('DOMContentLoaded', () => {
         return false;
     };
 
-    window.promptChmod = function(form, namaTarget, modeSaat) {
-        const modeBaru = prompt(`Enter new octal permissions for "${namaTarget}":`, modeSaat);
+    window.promptChmod = function(form) {
+        const namaTarget = form.dataset.name || '';
+        const modeSaat   = form.dataset.perms || '0755';
+        const modeBaru   = prompt(`Enter new octal permissions for "${namaTarget}":`, modeSaat);
         if (modeBaru && modeBaru.length >= 3) {
             form.querySelector('.chmod_input').value = modeBaru;
             return true;
@@ -216,8 +227,10 @@ document.addEventListener('DOMContentLoaded', () => {
         return false;
     };
 
-    window.promptTouch = function(form, namaTarget, waktuSaat) {
-        const waktuBaru = prompt(
+    window.promptTouch = function(form) {
+        const namaTarget = form.dataset.name || '';
+        const waktuSaat  = form.dataset.mtime || '';
+        const waktuBaru  = prompt(
             `Enter new timestamp (YYYY-MM-DD HH:MM:SS) for "${namaTarget}":`,
             waktuSaat
         );

@@ -82,6 +82,11 @@ button:hover {
         <div class="icon-logo"><i class="fa-solid fa-code"></i></div>
         <h2>[ <?= $appName ?> ]</h2>
         <div class="subtitle"><?= $la ?></div>
+        <?php if (!empty($loginError)): ?>
+        <div style="background:rgba(255,0,0,0.15); border:1px solid #ff4444; color:#ff6666; padding:8px 10px; margin-bottom:10px; font-size:12px; border-radius:3px;">
+            <i class="fa-solid fa-circle-exclamation"></i> Invalid passphrase!
+        </div>
+        <?php endif; ?>
         <input type="password" name="ap" placeholder="<?= $lp ?>" autofocus required>
         <button type="submit"><i class="fa-solid fa-key"></i> <?= $lb ?></button>
     </form>

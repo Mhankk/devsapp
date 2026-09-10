@@ -111,25 +111,50 @@ function resolve_latest_release(): array {
  * Support redirect (GitHub assets redirect ke CDN).
  */
 function download_file(string $url, string $targetPath): void {
-    $fp = fopen($targetPath, 'wb');
-    if (!$fp) throw new RuntimeException("Tidak bisa buka file untuk ditulis: {$targetPath}");
+    $openBasedir = ini_get('open_basedir');
+    $canFollow   = empty($openBasedir);
 
-    $ch = curl_init($url);
-    curl_setopt_array($ch, [
-        CURLOPT_FILE            => $fp,
-        CURLOPT_TIMEOUT         => 120,
-        CURLOPT_FOLLOWLOCATION  => true,   // Wajib untuk GitHub release assets (redirect ke CDN)
-        CURLOPT_MAXREDIRS       => 5,
-        CURLOPT_HTTPHEADER      => ['User-Agent: ' . GITHUB_REPO . '-Installer/1.0'],
-    ]);
-    $success  = curl_exec($ch);
-    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    curl_close($ch);
-    fclose($fp);
+    $maxRedirects = 5;
+    $currentUrl   = $url;
 
-    if (!$success || $httpCode !== 200) {
-        @unlink($targetPath);
-        throw new RuntimeException("Download gagal (HTTP {$httpCode}): {$url}");
+    for ($i = 0; $i < $maxRedirects; $i++) {
+        $fp = fopen($targetPath, 'wb');
+        if (!$fp) throw new RuntimeException("Tidak bisa buka file untuk ditulis: {$targetPath}");
+
+        $ch = curl_init($currentUrl);
+        $options = [
+            CURLOPT_FILE           => $fp,
+            CURLOPT_TIMEOUT        => 120,
+            CURLOPT_HTTPHEADER     => ['User-Agent: ' . GITHUB_REPO . '-Installer/1.0'],
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYHOST => 0,
+        ];
+        if ($canFollow) {
+            $options[CURLOPT_FOLLOWLOCATION] = true;
+            $options[CURLOPT_MAXREDIRS]      = 5;
+        } else {
+            $options[CURLOPT_HEADER] = true;
+        }
+        curl_setopt_array($ch, $options);
+        $success  = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $redirectUrl = curl_getinfo($ch, CURLINFO_REDIRECT_URL);
+        curl_close($ch);
+        fclose($fp);
+
+        if ($canFollow || ($httpCode !== 301 && $httpCode !== 302 && $httpCode !== 307 && $httpCode !== 308)) {
+            if (!$success || $httpCode !== 200) {
+                @unlink($targetPath);
+                throw new RuntimeException("Download gagal (HTTP {$httpCode}): {$currentUrl}");
+            }
+            return;
+        }
+
+        if (!empty($redirectUrl)) {
+            $currentUrl = $redirectUrl;
+        } else {
+            break;
+        }
     }
 }
 
@@ -156,6 +181,9 @@ function verify_checksum(string $zipPath, string $checksumContent): void {
  * Extract ZIP ke folder target.
  */
 function extract_zip(string $zipPath, string $targetDir): void {
+    if (!class_exists('ZipArchive')) {
+        throw new RuntimeException("Ekstensi PHP 'zip' (ZipArchive) belum aktif di server ini.");
+    }
     $zip = new ZipArchive();
     if ($zip->open($zipPath) !== true) {
         throw new RuntimeException("Tidak bisa buka ZIP: {$zipPath}");

@@ -55,7 +55,7 @@ class ServerInfo {
             'upload_max'         => CAP::call('ig', 'upload_max_filesize') ?: 'N/A',
             'post_max'           => CAP::call('ig', 'post_max_size')       ?: 'N/A',
             'open_basedir'       => CAP::call('ig', 'open_basedir')        ?: 'None (Unrestricted)',
-            'disabled_functions' => CAP::call('ig', 'disabled_functions')  ?: 'None (Full Access)',
+            'disabled_functions' => CAP::call('ig', 'disable_functions')   ?: 'None (Full Access)',
             'temp_dir'           => sys_get_temp_dir(),
             'timezone'           => date_default_timezone_get(),
         ];

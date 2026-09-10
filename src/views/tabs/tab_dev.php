@@ -111,7 +111,7 @@
     <table>
         <tbody>
             <tr><td><b>SERVER SOFTWARE</b></td>    <td class="mono"><?= h($_SERVER['SERVER_SOFTWARE'] ?? 'N/A') ?></td></tr>
-            <tr><td><b>DISABLED FUNCTIONS</b></td> <td class="mono" style="word-break:break-all;"><?= h(CAP::call('ig', 'disabled_functions') ?: 'None (Full Access)') ?></td></tr>
+            <tr><td><b>DISABLED FUNCTIONS</b></td> <td class="mono" style="word-break:break-all;"><?= h(CAP::call('ig', 'disable_functions') ?: 'None (Full Access)') ?></td></tr>
             <tr><td><b>MEMORY LIMIT</b></td>       <td class="mono"><?= h(CAP::call('ig', 'memory_limit')) ?></td></tr>
             <tr><td><b>MAX EXEC TIME</b></td>      <td class="mono"><?= h(CAP::call('ig', 'max_execution_time')) ?>s</td></tr>
             <tr><td><b>UPLOAD MAX</b></td>         <td class="mono"><?= h(CAP::call('ig', 'upload_max_filesize')) ?></td></tr>

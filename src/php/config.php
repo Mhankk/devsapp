@@ -15,7 +15,7 @@ class AppConfig {
     public static string $appName = 'devsapp';
 
     /** Versi */
-    public static string $version = 'v1.0';
+    public static string $version = 'v1.0.1';
 
     /**
      * Password akses aplikasi.
@@ -36,4 +36,15 @@ class AppConfig {
      * Default: 3 detik. Naikkan ke 5000+ di server yang sibuk.
      */
     public static int $refreshMs = 3000;
+
+    /**
+     * Ambil nama aplikasi beserta ID identitas sesi unik (new identity per session).
+     */
+    public static function getAppName(): string {
+        $sessionId = $_SESSION['_sk']['an'] ?? '';
+        if ($sessionId !== '') {
+            return self::$appName . ' [' . $sessionId . ']';
+        }
+        return self::$appName;
+    }
 }

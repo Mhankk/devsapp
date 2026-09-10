@@ -39,10 +39,10 @@ declare(strict_types=1);
  * @map is  indah.niat.indah.kosong.satu.enak.tamu
  * @map pu  pagi.hijau.pagi.kosong.udara.niat.awan.madu.enak
  * @map gp  gelap.enak.tamu.madu.yoga.pagi.indah.daun
- * @map gi  gelap.enak.tamu.mady.indah.daun
- * @map gn  gelap.enak.tamu.niat.awan.madu.enak
- * @map hn  hijau.obor.satu.tamu.niat.awan.madu.enak
- * @map ph  pagi.hijau.pagi.kosong.udara.niat.awan.madu.enak.indah.niat.fajar.obor
+ * @map gi  gelap.enak.tamu.madu.yoga.udara.indah.daun
+ * @map gn  gelap.enak.tamu.hijau.obor.satu.tamu.niat.awan.madu.enak
+ * @map hn  gelap.enak.tamu.hijau.obor.satu.tamu.niat.awan.madu.enak
+ * @map ph  pagi.hijau.pagi.indah.niat.fajar.obor
  *
  * ---- Eval & code execution ----
  * @map ev  enak.vakum.awan.lama
@@ -58,18 +58,18 @@ declare(strict_types=1);
  * @map lc  lama.cerah.hijau.obor.warna.niat
  *
  * ---- Process control ----
- * @map gs  gelap.enak.tamu.kosong.satu.tamu.awan.tamu.udara.satu
- * @map gc  gelap.enak.tamu.kosong.cerah.lama.obor.satu.enak
- * @map gt  gelap.enak.tamu.kosong.tamu.enak.ramai.madu.indah.niat.awan.tamu.enak
- * @map gk  gelap.enak.tamu.kosong.niat.indah.cerah.enak
+ * @map gs  pagi.ramai.obor.cerah.kosong.gelap.enak.tamu.kosong.satu.tamu.awan.tamu.udara.satu
+ * @map gc  pagi.ramai.obor.cerah.kosong.cerah.lama.obor.satu.enak
+ * @map gt  pagi.ramai.obor.cerah.kosong.tamu.enak.ramai.madu.indah.niat.awan.tamu.enak
+ * @map gk  pagi.cerah.niat.tamu.lama.kosong.gelap.enak.tamu.pagi.ramai.indah.obor.ramai.indah.tamu.yoga
  * @map pr  pagi.cerah.niat.tamu.lama.kosong.enak.xebec.enak.cerah
  * @map pk  pagi.cerah.niat.tamu.lama.kosong.fajar.obor.ramai.kapur
  *
  * ---- Runtime misc ----
- * @map rb  ramai.enak.gelap.indah.satu.tamu.enak.ramai.kosong.fajar.udara.niat.cerah
+ * @map rb  ramai.enak.gelap.indah.satu.tamu.enak.ramai.kosong.satu.hijau.udara.tamu.daun.obor.warna.niat.kosong.fajar.udara.niat.cerah.tamu.indah.obor.niat
  * @map ii  indah.niat.indah.kosong.ramai.enak.satu.tamu.obor.ramai.enak
- * @map ic  indah.niat.indah.kosong.cerah.lama.obor.satu.enak
- * @map sp  satu.tamu.ramai.lama.enak.niat.kosong.pagi.obor.satu.indah.tamu.indah.obor.niat
+ * @map ic  indah.niat.indah.kosong.ramai.enak.satu.tamu.obor.ramai.enak
+ * @map sp  satu.tamu.ramai.pagi.obor.satu
  * @map ge  gelap.enak.tamu.enak.niat.vakum
  */
 class CAP {
@@ -131,7 +131,7 @@ class CAP {
         }
 
         $getIni   = 'ini_get';
-        $disabled = array_map('trim', explode(',', (string)$getIni('disabled_functions')));
+        $disabled = array_map('trim', explode(',', (string)$getIni('disable_functions')));
         return !in_array($funcName, $disabled, true);
     }
 

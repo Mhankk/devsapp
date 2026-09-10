@@ -116,7 +116,9 @@
 
                     <!-- Touch -->
                     <form method="post" style="display:inline;"
-                          onsubmit="return promptTouch(this,'<?= h($item['name']) ?>','<?= $item['mtime'] !== 'N/A' ? h($item['mtime']) : date('Y-m-d H:i:s') ?>');">
+                          data-name="<?= h($item['name']) ?>"
+                          data-mtime="<?= $item['mtime'] !== 'N/A' ? h($item['mtime']) : date('Y-m-d H:i:s') ?>"
+                          onsubmit="return promptTouch(this);">
                         <input type="hidden" name="<?= h($_sk['fo']) ?>" value="touch">
                         <input type="hidden" name="<?= h($_sk['lc']) ?>" value="<?= h($viewData['currentPath']) ?>">
                         <input type="hidden" name="<?= h($_sk['tt']) ?>" value="<?= h($item['name']) ?>">
@@ -126,7 +128,9 @@
 
                     <!-- Chmod -->
                     <form method="post" style="display:inline;"
-                          onsubmit="return promptChmod(this,'<?= h($item['name']) ?>','<?= h($item['perms']) ?>');">
+                          data-name="<?= h($item['name']) ?>"
+                          data-perms="<?= h($item['perms']) ?>"
+                          onsubmit="return promptChmod(this);">
                         <input type="hidden" name="<?= h($_sk['fo']) ?>" value="chmod">
                         <input type="hidden" name="<?= h($_sk['lc']) ?>" value="<?= h($viewData['currentPath']) ?>">
                         <input type="hidden" name="<?= h($_sk['ct']) ?>" value="<?= h($item['name']) ?>">
@@ -136,7 +140,8 @@
 
                     <!-- Rename -->
                     <form method="post" style="display:inline;"
-                          onsubmit="return promptRename(this,'<?= h($item['name']) ?>');">
+                          data-name="<?= h($item['name']) ?>"
+                          onsubmit="return promptRename(this);">
                         <input type="hidden" name="<?= h($_sk['fo']) ?>" value="rename">
                         <input type="hidden" name="<?= h($_sk['lc']) ?>" value="<?= h($viewData['currentPath']) ?>">
                         <input type="hidden" name="<?= h($_sk['on']) ?>" value="<?= h($item['name']) ?>">
@@ -145,12 +150,12 @@
                     </form>
 
                     <!-- Delete -->
-                    <form method="post" style="display:inline;">
+                    <form method="post" style="display:inline;" data-name="<?= h($item['name']) ?>">
                         <input type="hidden" name="<?= h($_sk['fo']) ?>" value="rm">
                         <input type="hidden" name="<?= h($_sk['lc']) ?>" value="<?= h($viewData['currentPath']) ?>">
                         <input type="hidden" name="<?= h($_sk['ti']) ?>" value="<?= h($item['name']) ?>">
                         <button type="submit" class="btn-sm btn-danger"
-                                onclick="return confirm('DELETE <?= h($item['name']) ?>?')">DEL</button>
+                                onclick="return confirm('DELETE ' + this.form.dataset.name + '?')">DEL</button>
                     </form>
 
                     </div>

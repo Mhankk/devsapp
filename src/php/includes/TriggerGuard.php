@@ -58,14 +58,9 @@ class TriggerGuard {
                     $state = self::S_T1;
                     break;
 
-                // State 1: Cek time window (08:00 - 23:00)
-                // Fitur sensitif dinonaktifkan di jam-jam crawl bot biasa (03:00 - 07:00)
+                // State 1: Level ELEVATED gate check
                 case self::S_T1:
-                    $hour = (int)date('G');
-                    if ($hour >= 3 && $hour < 7) {
-                        $state = self::S_TF; break; // Silent deny di jam bot
-                    }
-                    // Level 2 — lulus kalau time window ok
+                    // Level 2 — lulus kalau auth ok
                     if ($level <= self::LEVEL_ELEVATED) {
                         $permitted = true; $state = self::S_TF; break;
                     }
