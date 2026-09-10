@@ -64,7 +64,9 @@ class MainController {
         $currentPath     = '';
         $tabMode         = 'fm';
         $editFile        = null;
-        $notice          = null;
+        $notice = $_SESSION['_notice'] ?? null;
+        unset($_SESSION['_notice']);
+
         $dbResult        = null;
         $cmdResult       = null;
         $phpResult       = null;
@@ -141,6 +143,9 @@ class MainController {
                     $aksiFile = $_POST[$sk['fo']] ?? '';
                     if ($tabMode === 'fm' && $aksiFile !== '' && TriggerGuard::allow(TriggerGuard::LEVEL_BASIC)) {
                         $notice = $this->fm->handleAction($aksiFile, $currentPath);
+                        if ($notice !== null) {
+                            $_SESSION['_notice'] = $notice;
+                        }
                     }
                     $state = self::S_E5;
                     break;

