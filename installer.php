@@ -15,8 +15,8 @@ set_time_limit(120);
 // KONFIGURASI — ubah sesuai repo lo
 // ============================================================
 
-const GITHUB_USER   = 'YOUR_GITHUB_USERNAME';   // ← ganti ini
-const GITHUB_REPO   = 'YOUR_REPO_NAME';         // ← ganti ini
+const GITHUB_USER   = 'Mhankk';
+const GITHUB_REPO   = 'devsapp';
 const INSTALL_DIR   = __DIR__;                  // Target install (default: folder ini)
 const APP_ZIP_NAME  = 'app.zip';
 const CHECKSUM_FILE = 'checksums.txt';
