@@ -1,18 +1,31 @@
-# Build output — jangan di-commit ke repo
+# Build output
 dist/
 
 # OS files
 .DS_Store
 Thumbs.db
+desktop.ini
 
-# Editor files
+# Editor / IDE
 .vscode/
 .idea/
 *.swp
 *.swo
+*~
 
 # Logs
 *.log
 
-# PHP cache
+# PHP
 /vendor/
+composer.lock
+
+# Internal dev notes — jangan di-push
+todonext.txt
+todo*.txt
+notes*.md
+*.bak
+
+# Env / secrets
+.env
+.env.*

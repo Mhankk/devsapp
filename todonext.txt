@@ -1,5 +1,0 @@
-Langkah selanjutnya sesuai plan:
-
-Edit installer.php → ganti GITHUB_USER dan GITHUB_REPO
-Jalankan bash build.sh v1.0.0 buat pertama kali
-Push ke GitHub, buat Release, attach dist/app.zip + dist/checksums.txt
