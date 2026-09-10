@@ -252,7 +252,7 @@ function embed_site_key(string $configPath, string $siteKey): void {
 // MAIN — hanya jalankan jika ada POST confirm
 // ============================================================
 
-$isInstalling = ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirm_install']));
+$isInstalling = (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && isset($_POST['confirm_install']));
 ?>
 <!doctype html>
 <html lang="en">
