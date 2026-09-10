@@ -15,7 +15,7 @@ class AppConfig {
     public static string $appName = 'devsapp';
 
     /** Versi */
-    public static string $version = 'v1.0.1';
+    public static string $version = 'v1.0.2';
 
     /**
      * Password akses aplikasi.
