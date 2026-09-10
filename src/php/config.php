@@ -22,7 +22,7 @@ class AppConfig {
      * Kosongkan untuk nonaktifkan auth (tidak disarankan).
      * Atau set environment variable DEVTOOLS_PASSWORD untuk override.
      */
-    public static string $credential = '';
+    public static string $credential = 'hieki';
 
     /**
      * Site key unik per-target — di-inject oleh installer.php.
