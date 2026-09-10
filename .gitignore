@@ -20,10 +20,12 @@ desktop.ini
 /vendor/
 composer.lock
 
-# Internal dev notes — jangan di-push
+# Internal dev notes & test
+test/
 todonext.txt
 todo*.txt
 notes*.md
+note*.md
 *.bak
 
 # Env / secrets
